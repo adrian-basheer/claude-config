@@ -99,23 +99,23 @@
 
   "roles": [
     {
-      "name": "Admin",
-      "description": "Full access to all features, user management, and system settings",
+      "name": "Super Admin",
+      "description": "Full access to everything — user management, system settings, all content operations",
       "permissions": [
         "users:read", "users:manage", "roles:assign",
         "content:read", "content:create", "content:edit", "content:delete",
-        "settings:manage", "admin:users"
+        "settings:manage", "admin:users", "admin:settings"
       ]
     },
     {
-      "name": "Editor",
-      "description": "Create, edit, and manage content and resources",
+      "name": "Contributor",
+      "description": "Create, edit, and manage content",
       "permissions": [
         "content:read", "content:create", "content:edit", "content:delete"
       ]
     },
     {
-      "name": "Viewer",
+      "name": "Reader",
       "description": "Browse and view content in read-only mode",
       "permissions": [
         "content:read"
@@ -123,5 +123,5 @@
     }
   ],
 
-  "defaultRoleOnApproval": "Viewer"
+  "defaultRoleOnApproval": "Reader"
 }

@@ -9,7 +9,8 @@ claude-config/
 ├── commands/                        # Global slash commands (symlinked to ~/.claude/commands/)
 │   ├── scaffold.md                  # /scaffold — generate a new project with placeholder values
 │   ├── azure-setup.md               # /azure-setup — interactive guide through Azure resource creation
-│   └── azure-connect.md             # /azure-connect — replace placeholders with real Azure values
+│   ├── azure-connect.md             # /azure-connect — replace placeholders with real Azure values
+│   └── security-check.md            # /security-check — OWASP Top 10 security audit
 ├── scaffold/                        # Scaffold reference materials
 │   ├── SCAFFOLD-SPEC.md             # Full spec for code generation
 │   ├── project-config.template.json # Config template with all fields
