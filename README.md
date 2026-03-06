@@ -45,30 +45,51 @@ The three commands form a pipeline for creating new projects:
 
 Each command is independent — you can skip `/azure-setup` if you fill in `project-config.json` manually, or re-run `/azure-connect` when moving to a different Azure subscription.
 
-## Setup
+## Setup (new machine)
 
 ### 1. Clone this repo
 
 ```bash
-cd C:\Users\adria\source\repos
-git clone <your-repo-url> claude-config
+cd C:\Users\YourUser\source\repos
+git clone https://github.com/adrian-basheer/claude-config.git
 ```
 
-### 2. Symlink commands to ~/.claude/
+### 2. Create a junction to ~/.claude/commands/
 
-Run PowerShell **as Administrator**:
+A junction links `~/.claude/commands/` to the repo's `commands/` folder so Claude Code picks them up globally. No admin privileges needed.
 
 ```powershell
 # Remove existing commands dir if present
 if (Test-Path "$HOME\.claude\commands") { Remove-Item "$HOME\.claude\commands" -Recurse }
 
-# Create symlink
-New-Item -ItemType SymbolicLink -Path "$HOME\.claude\commands" -Target "C:\Users\adria\source\repos\claude-config\commands"
+# Create junction (adjust the target path to where you cloned the repo)
+cmd /c mklink /J "$HOME\.claude\commands" "C:\Users\YourUser\source\repos\claude-config\commands"
 ```
 
 ### 3. Verify
 
-Open Claude Code in any project and type `/` — you should see `scaffold`, `azure-setup`, and `azure-connect` in the command list.
+Open Claude Code in any directory and type `/` — you should see `scaffold`, `azure-setup`, and `azure-connect` in the command list.
+
+## Usage — scaffolding a new project
+
+The slash commands are **global** — available regardless of which folder you run Claude from. To scaffold a new project:
+
+```bash
+# Navigate to where you want the project created
+cd C:\Users\YourUser\source\repos
+
+# Start Claude Code
+claude
+
+# Type /scaffold — follow the prompts (project name, etc.)
+# The project folder is created in the current directory
+
+# Later, when ready to set up Azure resources:
+# /azure-setup — interactive walkthrough, builds project-config.json
+
+# Finally, wire up real values:
+# /azure-connect — replaces TODO_* placeholders with config values
+```
 
 ## Adding new commands
 
