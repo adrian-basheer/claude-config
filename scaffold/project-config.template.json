@@ -1,0 +1,127 @@
+{
+  "$schema": "./project-config.schema.json",
+  "_comment": "Copy this file to your project root folder and fill in your values. Pass it to the scaffold command along with a project name.",
+
+  "projectName": "MyApp",
+  "projectDescription": "My web application",
+
+  "azure": {
+    "resourceGroup": "MyResourceGroup",
+    "location": "australiacentral",
+    "subscriptionId": "00000000-0000-0000-0000-000000000000"
+  },
+
+  "entra": {
+    "tenantSubdomain": "myapptenant",
+    "tenantId": "00000000-0000-0000-0000-000000000000",
+    "apiAppRegistration": {
+      "clientId": "00000000-0000-0000-0000-000000000000",
+      "displayName": "MyAppApi"
+    },
+    "portalAppRegistration": {
+      "clientId": "00000000-0000-0000-0000-000000000000",
+      "displayName": "MyAppPortal"
+    },
+    "adminGroup": {
+      "objectId": "00000000-0000-0000-0000-000000000000",
+      "displayName": "MyAppAdmins"
+    },
+    "apiScope": "access_as_user"
+  },
+
+  "appServices": {
+    "api": {
+      "name": "myapp-api",
+      "url": "https://myapp-api.azurewebsites.net"
+    },
+    "portal": {
+      "name": "myapp-portal",
+      "url": "https://myapp-portal.azurewebsites.net"
+    }
+  },
+
+  "keyVault": {
+    "name": "myapp-kv",
+    "uri": "https://myapp-kv.vault.azure.net/"
+  },
+
+  "storage": {
+    "accountName": "myappstorage",
+    "tableServiceUri": "https://myappstorage.table.core.windows.net/",
+    "blobServiceUri": "https://myappstorage.blob.core.windows.net/",
+    "queueServiceUri": "https://myappstorage.queue.core.windows.net/"
+  },
+
+  "cosmosDb": {
+    "accountName": "myapp-cosmos",
+    "accountUri": "https://myapp-cosmos.documents.azure.com:443/",
+    "databaseName": "myapp",
+    "containers": {
+      "cases": "cases"
+    }
+  },
+
+  "apim": {
+    "name": "myapp-apim",
+    "gatewayUrl": "https://myapp-apim.azure-api.net",
+    "publisherName": "Your Name",
+    "publisherEmail": "you@example.com",
+    "sku": "Consumption",
+    "apiSuffix": "api"
+  },
+
+  "graph": {
+    "clientId": "00000000-0000-0000-0000-000000000000",
+    "clientSecretKeyVaultName": "Graph--ClientSecret"
+  },
+
+  "pipeline": {
+    "agentPool": "MyPC",
+    "agentName": "ADRIANXPS",
+    "variableGroup": "azure-deploy",
+    "triggerBranch": "master"
+  },
+
+  "portal": {
+    "primaryColor": "#3182ce",
+    "logoLetter": "M",
+    "logoColor": "#48bb78",
+    "headerGradient": ["#1a365d", "#2c5282"],
+    "headingColor": "#1a365d",
+    "subtextColor": "#718096",
+    "accentColors": {
+      "success": "#38a169",
+      "purple": "#805ad5",
+      "adminTileUsers": "#1890ff",
+      "adminTileSettings": "#52c41a"
+    }
+  },
+
+  "roles": [
+    {
+      "name": "Admin",
+      "description": "Full access to all features, user management, and system settings",
+      "permissions": [
+        "users:read", "users:manage", "roles:assign",
+        "content:read", "content:create", "content:edit", "content:delete",
+        "settings:manage", "admin:users"
+      ]
+    },
+    {
+      "name": "Editor",
+      "description": "Create, edit, and manage content and resources",
+      "permissions": [
+        "content:read", "content:create", "content:edit", "content:delete"
+      ]
+    },
+    {
+      "name": "Viewer",
+      "description": "Browse and view content in read-only mode",
+      "permissions": [
+        "content:read"
+      ]
+    }
+  ],
+
+  "defaultRoleOnApproval": "Viewer"
+}

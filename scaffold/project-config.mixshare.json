@@ -1,0 +1,130 @@
+{
+  "$schema": "./project-config.schema.json",
+  "_comment": "Real Mixshare values. Use this to scaffold a test project that works with the existing Entra tenant, storage, and key vault from day one. Local dev will work immediately — production deployment needs new App Services.",
+
+  "projectName": "Mixshare",
+  "projectDescription": "DNA Mixshare — collaborative platform for the forensic DNA community",
+
+  "azure": {
+    "resourceGroup": "MIxShare",
+    "location": "australiacentral",
+    "subscriptionId": "ca910ae5-7549-4096-ae7f-c9ada70d279a"
+  },
+
+  "entra": {
+    "tenantSubdomain": "mixsharetenant",
+    "tenantId": "524d1a02-1da4-4815-ad94-619b3a97bc70",
+    "apiAppRegistration": {
+      "clientId": "73426ec5-a188-4bb1-9d69-f90b7639eec0",
+      "displayName": "MixshareApi"
+    },
+    "portalAppRegistration": {
+      "clientId": "e5b95370-9014-41e4-92a7-06194972aab6",
+      "displayName": "MixsharePortal"
+    },
+    "adminGroup": {
+      "objectId": "67d4b6ec-fbf8-4ee2-a3a8-20392a519112",
+      "displayName": "MixshareAdmins"
+    },
+    "apiScope": "access_as_user"
+  },
+
+  "appServices": {
+    "api": {
+      "name": "mixshare-api-ekhtdnepg2b3hsdn",
+      "url": "https://mixshare-api-ekhtdnepg2b3hsdn.australiacentral-01.azurewebsites.net"
+    },
+    "portal": {
+      "name": "mixshare-portal",
+      "url": "https://mixshare-portal.azurewebsites.net"
+    }
+  },
+
+  "keyVault": {
+    "name": "mixshare-kv",
+    "uri": "https://mixshare-kv.vault.azure.net/"
+  },
+
+  "storage": {
+    "accountName": "mixsharestorage",
+    "tableServiceUri": "https://mixsharestorage.table.core.windows.net/",
+    "blobServiceUri": "https://mixsharestorage.blob.core.windows.net/",
+    "queueServiceUri": "https://mixsharestorage.queue.core.windows.net/"
+  },
+
+  "cosmosDb": {
+    "accountName": "mixshare-cosmos",
+    "accountUri": "https://mixshare-cosmos.documents.azure.com:443/",
+    "databaseName": "mixshare",
+    "containers": {
+      "cases": "cases"
+    }
+  },
+
+  "apim": {
+    "_comment": "APIM not yet created for Mixshare. Fill in after running runsheet 08.",
+    "name": "",
+    "gatewayUrl": "",
+    "publisherName": "",
+    "publisherEmail": "",
+    "sku": "Consumption",
+    "apiSuffix": "api"
+  },
+
+  "graph": {
+    "clientId": "73426ec5-a188-4bb1-9d69-f90b7639eec0",
+    "clientSecretKeyVaultName": "Graph--ClientSecret"
+  },
+
+  "pipeline": {
+    "agentPool": "MyPC",
+    "agentName": "ADRIANXPS",
+    "variableGroup": "azure-deploy",
+    "triggerBranch": "master"
+  },
+
+  "portal": {
+    "primaryColor": "#3182ce",
+    "logoLetter": "M",
+    "logoColor": "#48bb78",
+    "headerGradient": ["#1a365d", "#2c5282"],
+    "headingColor": "#1a365d",
+    "subtextColor": "#718096",
+    "accentColors": {
+      "success": "#38a169",
+      "purple": "#805ad5",
+      "adminTileUsers": "#1890ff",
+      "adminTileSettings": "#52c41a"
+    }
+  },
+
+  "roles": [
+    {
+      "name": "Admin",
+      "description": "Full access to all features, user management, and system settings",
+      "permissions": [
+        "users:read", "users:manage", "roles:assign",
+        "content:read", "content:create", "content:edit", "content:delete",
+        "settings:manage", "admin:users", "admin:reference-data",
+        "cases:browse", "cases:view", "cases:create", "fsa:upload"
+      ]
+    },
+    {
+      "name": "Editor",
+      "description": "Create, edit, and manage content and resources",
+      "permissions": [
+        "content:read", "content:create", "content:edit", "content:delete",
+        "cases:browse", "cases:view", "cases:create", "fsa:upload"
+      ]
+    },
+    {
+      "name": "Viewer",
+      "description": "Browse and view content in read-only mode",
+      "permissions": [
+        "content:read", "cases:browse", "cases:view"
+      ]
+    }
+  ],
+
+  "defaultRoleOnApproval": "Viewer"
+}
