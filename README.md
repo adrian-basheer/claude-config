@@ -1,102 +1,120 @@
 # Claude Config
 
-Personal Claude Code configuration — global slash commands, scaffold templates, and reusable patterns.
+Personal Claude Code configuration — global commands, skills, scaffold templates, and reusable patterns.
 
 ## Structure
 
 ```
 claude-config/
-├── commands/                        # Global slash commands (symlinked to ~/.claude/commands/)
-│   ├── scaffold.md                  # /scaffold — generate a new project with placeholder values
-│   ├── azure-setup.md               # /azure-setup — interactive guide through Azure resource creation
-│   ├── azure-connect.md             # /azure-connect — replace placeholders with real Azure values
-│   └── security-check.md            # /security-check — OWASP Top 10 security audit
-├── scaffold/                        # Scaffold reference materials
-│   ├── SCAFFOLD-SPEC.md             # Full spec for code generation
-│   ├── project-config.template.json # Config template with all fields
-│   ├── project-config.mixshare.json # Filled-in example (Mixshare project)
-│   └── runsheets/                   # Step-by-step Azure resource setup guides
-│       ├── 00-overview.md
-│       ├── 01-entra-external-id-setup.md
-│       ├── 02-app-registrations.md
-│       ├── 03-storage-account.md
-│       ├── 04-key-vault.md
-│       ├── 05-app-services.md
-│       ├── 06-microsoft-graph-api.md
-│       ├── 07-azure-devops-pipeline.md
-│       ├── 08-api-management.md
-│       └── 09-cosmos-db.md
+├── commands/                              # Global slash commands
+│   └── security-check.md                  # /security-check — OWASP Top 10 security audit
+├── skills/                                # Global skills (richer than commands)
+│   └── new-project/                       # /new-project — full project creation workflow
+│       ├── SKILL.md                       # Orchestrator: scaffold → azure setup → connect
+│       ├── SCAFFOLD-SPEC.md               # Full spec for code generation
+│       ├── project-config.template.json   # Config template with all fields
+│       ├── project-config.mixshare.json   # Filled-in example (Mixshare project)
+│       └── runsheets/                     # Step-by-step Azure resource setup guides
+│           ├── 00-overview.md
+│           ├── 01-entra-external-id-setup.md
+│           ├── 02-app-registrations.md
+│           ├── 03-storage-account.md
+│           ├── 04-key-vault.md
+│           ├── 05-app-services.md
+│           ├── 06-microsoft-graph-api.md
+│           ├── 07-azure-devops-pipeline.md
+│           ├── 08-api-management.md
+│           └── 09-cosmos-db.md
 └── README.md
 ```
 
 ## Workflow
 
-The three commands form a pipeline for creating new projects:
+The `/new-project` skill guides you through three phases:
 
 ```
-/scaffold          →  Buildable code with TODO_* placeholders
-                       Includes runsheets/ folder for reference
+Phase 1: Scaffold    →  Buildable code with TODO_* placeholders
+                        Includes runsheets/ folder for reference
 
-/azure-setup       →  Interactive guide through Azure Portal + az CLI
-                       Produces completed project-config.json
+Phase 2: Azure Setup →  Interactive guide through Azure Portal + az CLI
+                        Fills in project-config.json with real values
 
-/azure-connect     →  Replaces all placeholders with real values
-                       Project is ready to deploy
+Phase 3: Connect     →  Replaces all placeholders with real values
+                        Project is ready to deploy
 ```
 
-Each command is independent — you can skip `/azure-setup` if you fill in `project-config.json` manually, or re-run `/azure-connect` when moving to a different Azure subscription.
+You can stop after any phase and resume later — progress is saved in `project-config.json`.
 
 ## Setup (new machine)
 
 ### 1. Clone this repo
 
 ```bash
-cd C:\Users\YourUser\source\repos
 git clone https://github.com/adrian-basheer/claude-config.git
 ```
 
-### 2. Create a junction to ~/.claude/commands/
+### 2. Create junctions
 
-A junction links `~/.claude/commands/` to the repo's `commands/` folder so Claude Code picks them up globally. No admin privileges needed.
+Two junctions link the repo's folders to `~/.claude/` so Claude Code picks them up globally.
+
+**Windows (PowerShell — no admin required):**
 
 ```powershell
-# Remove existing commands dir if present
-if (Test-Path "$HOME\.claude\commands") { Remove-Item "$HOME\.claude\commands" -Recurse }
+# Adjust $RepoPath to where you cloned the repo
+$RepoPath = "C:\Users\YourUser\source\repos\claude-config"
 
-# Create junction (adjust the target path to where you cloned the repo)
-cmd /c mklink /J "$HOME\.claude\commands" "C:\Users\YourUser\source\repos\claude-config\commands"
+# Remove existing dirs if present
+if (Test-Path "$HOME\.claude\commands") { Remove-Item "$HOME\.claude\commands" -Recurse }
+if (Test-Path "$HOME\.claude\skills")   { Remove-Item "$HOME\.claude\skills" -Recurse }
+
+# Create junctions
+cmd /c mklink /J "$HOME\.claude\commands" "$RepoPath\commands"
+cmd /c mklink /J "$HOME\.claude\skills"   "$RepoPath\skills"
+```
+
+**macOS / Linux:**
+
+```bash
+# Adjust REPO_PATH to where you cloned the repo
+REPO_PATH="$HOME/source/repos/claude-config"
+
+# Remove existing dirs if present
+rm -rf ~/.claude/commands ~/.claude/skills
+
+# Create symlinks
+ln -s "$REPO_PATH/commands" ~/.claude/commands
+ln -s "$REPO_PATH/skills"   ~/.claude/skills
 ```
 
 ### 3. Verify
 
-Open Claude Code in any directory and type `/` — you should see `scaffold`, `azure-setup`, and `azure-connect` in the command list.
+Open Claude Code in any directory and type `/` — you should see `new-project` and `security-check` in the list.
 
-## Usage — scaffolding a new project
-
-The slash commands are **global** — available regardless of which folder you run Claude from. To scaffold a new project:
+## Usage
 
 ```bash
 # Navigate to where you want the project created
-cd C:\Users\YourUser\source\repos
+cd ~/source/repos
 
 # Start Claude Code
 claude
 
-# Type /scaffold — follow the prompts (project name, etc.)
-# The project folder is created in the current directory
+# Type /new-project — follow the guided phases
+# Phase 1: generates the codebase with placeholder values
+# Phase 2: walks through Azure resource creation
+# Phase 3: wires up real values and verifies builds
 
-# Later, when ready to set up Azure resources:
-# /azure-setup — interactive walkthrough, builds project-config.json
-
-# Finally, wire up real values:
-# /azure-connect — replaces TODO_* placeholders with config values
+# Run a security audit on any project:
+# /security-check
 ```
 
-## Adding new commands
+## Adding new commands or skills
 
-Create a new `.md` file in `commands/`. The filename (without extension) becomes the slash command name. For example, `commands/deploy.md` becomes `/deploy`.
+**Commands** — create a `.md` file in `commands/`. The filename becomes the slash command name (e.g., `commands/deploy.md` → `/deploy`).
 
-The symlink means changes here are immediately available — no need to copy or re-link.
+**Skills** — create a directory in `skills/` with a `SKILL.md` file. The directory name becomes the skill name. Skills support YAML frontmatter, supporting files, and `${CLAUDE_SKILL_DIR}` for portable path references. See [Claude Code skills docs](https://docs.anthropic.com/en/docs/claude-code/skills) for details.
+
+Changes are immediately available through the junctions — no need to copy or re-link.
 
 ## What stays project-specific
 
