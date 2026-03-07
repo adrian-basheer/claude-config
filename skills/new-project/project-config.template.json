@@ -2,6 +2,12 @@
   "$schema": "./project-config.schema.json",
   "_comment": "Copy this file to your project root folder and fill in your values. Pass it to the scaffold command along with a project name.",
 
+  "_progress": {
+    "phase": 0,
+    "lastCompletedRunsheet": null,
+    "status": "not-started"
+  },
+
   "projectName": "MyApp",
   "projectDescription": "My web application",
 

@@ -12,6 +12,26 @@ This skill guides you through three phases:
 2. **Azure Setup** — create Azure resources interactively
 3. **Azure Connect** — replace placeholders with real values
 
+## Progress Tracking
+
+Progress is persisted in the project's `project-config.json` via the `_progress` field:
+
+```json
+"_progress": {
+  "phase": 2,
+  "lastCompletedRunsheet": "03-storage-account",
+  "status": "in-progress"
+}
+```
+
+**On every invocation**, read `project-config.json` first and resume from where `_progress` indicates. Update `_progress` after each milestone:
+- After Phase 1 completes: `{ "phase": 1, "lastCompletedRunsheet": null, "status": "complete" }`
+- During Phase 2, after each runsheet: `{ "phase": 2, "lastCompletedRunsheet": "03-storage-account", "status": "in-progress" }`
+- After Phase 2 completes: `{ "phase": 2, "lastCompletedRunsheet": "09-cosmos-db", "status": "complete" }`
+- After Phase 3 completes: `{ "phase": 3, "lastCompletedRunsheet": "09-cosmos-db", "status": "complete" }`
+
+If `project-config.json` doesn't exist yet, start from Phase 1. If it exists, tell the user where they left off and confirm before continuing.
+
 ---
 
 ## Phase 1: Scaffold
@@ -46,7 +66,9 @@ Generate a buildable codebase with placeholder values. No Azure resources need t
    - Run `npm install && npm run build` from the portal directory
    - Fix any compilation errors before proceeding
 
-6. **Ask the user** if they want to continue to Phase 2 now, or stop here and resume later.
+6. **Update `_progress`** in `project-config.json` to `{ "phase": 1, "status": "complete" }`
+
+7. **Ask the user** if they want to continue to Phase 2 now, or stop here and resume later.
 
 ### Placeholder Convention
 
@@ -125,10 +147,12 @@ Walk through Azure resource creation step-by-step, filling in `project-config.js
       - Capture output values automatically
 
    d. **Update `project-config.json`** after each runsheet so progress isn't lost
+      - Update `_progress.lastCompletedRunsheet` to the runsheet just finished
+      - Show what was filled in
 
    e. **Validate** — check GUIDs are valid format, URLs are well-formed
 
-4. **Track progress:** After each runsheet show "Completed 3/9 — next: Key Vault". If the user stops, progress is saved. On resume, skip completed steps.
+4. **Track progress:** After each runsheet show "Completed 3/9 — next: Key Vault". The `_progress` field in `project-config.json` records exactly where you are. On resume (even in a new session), read `_progress` and skip completed steps.
 
 5. **After all runsheets:** Display completed config and ask if user wants to continue to Phase 3.
 
